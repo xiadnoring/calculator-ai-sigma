@@ -1,6 +1,6 @@
 # Version 1
 
-1. Create a Web Server in C++ 20
+1. Create a Web Server on C++ 20
 2. Use LLM agents from openrouter
 3. Create a logic for Calculator AI (product)
 4. Implement a fronted on Svelte
