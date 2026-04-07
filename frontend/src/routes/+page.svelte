@@ -255,7 +255,7 @@
 
 		<!-- Messages Area -->
 		<div class="flex-1 overflow-y-auto" bind:this={messagesContainer}>
-			<div class="max-w-3xl mx-auto px-6 py-8">
+			<div class="max-w-5xl mx-auto px-6 py-8">
 				{#if !$activeSession || $activeMessages.length === 0}
 					<!-- Welcome Screen -->
 					<div class="flex flex-col items-center justify-center py-12 animate-fade-in-up">

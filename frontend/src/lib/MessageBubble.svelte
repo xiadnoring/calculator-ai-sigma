@@ -23,7 +23,7 @@
 	style="opacity: {isVisible ? 1 : 0}; transform: translateY({isVisible ? '0' : '16px'}); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) {index * 0.06}s;"
 >
 	<div
-		class="message-bubble max-w-[80%] md:max-w-[65%] rounded-xl px-5 py-4 break-all {message.role === 'user'
+		class="message-bubble max-w-[90%] md:max-w-[80%] lg:max-w-[75%] rounded-xl px-5 py-4 break-all min-w-0 {message.role === 'user'
 			? 'bg-[#141414] border border-[#1f1f1f] text-white rounded-tr-sm'
 			: 'bg-[#111] border border-[#1a1a1a] text-white rounded-tl-sm'}"
 	>
@@ -41,7 +41,7 @@
 			</details>
 		{/if}
 
-		<div class="message-content break-all" style="overflow-wrap: anywhere; word-break: break-word;">
+		<div class="message-content" style="overflow-wrap: anywhere; word-break: break-word; max-width: 100%; min-width: 0;">
 			{#if isStreaming && !hasAnswer}
 				<div class="flex items-center gap-3">
 					<div class="typing-indicator flex gap-1.5">
