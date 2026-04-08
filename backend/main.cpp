@@ -283,7 +283,7 @@ int main() {
             auto pool = manapi::json::object();
             auto version = manapi::json::array();
             version.push_back("1.1");
-            pool.insert("address", "127.0.0.1");
+            pool.insert("address", "0.0.0.0");
             pool.insert("http", std::move(version));
             pool.insert("transport", "tcp");
             pool.insert("port" ,"8888");
