@@ -276,23 +276,26 @@ int main() {
             app = manapi::json::parse(manapi::unwrap(co_await manapi::fs::async_read(zconfig))).unwrap();
 
             auto &dbapp = app["db"];
+
             manapi::unwrap(co_await db.connect(dbapp["host"].as_string(), dbapp["port"].as_string(), dbapp["user"].as_string(), dbapp["password"].as_string(), dbapp["db"].as_string()));
 
-            manapi::unwrap(co_await router.config_object({
-                {"pools", manapi::json::array({
-                    {
-                        {"address", "127.0.0.1"},
-                        {"http", manapi::json::array({"1.1"})},
-                        {"transport", "tcp"},
-                        {"partial_data_min_size", 0},
-                        {"port", "8888"},
-                        {"tcp_no_delay", true},
-                        {"max_merge_buffer_stack", 0},
-                        {"buffer_size", 4096}
-                    }
-                })},
-                {"save_config", false}
-            }));
+            auto pools = manapi::json::array();
+            auto pool = manapi::json::object();
+            auto version = manapi::json::array();
+            version.push_back("1.1");
+            pool.insert("address", "127.0.0.1");
+            pool.insert("http", std::move(version));
+            pool.insert("transport", "tcp");
+            pool.insert("port" ,"8888");
+            pool.insert("tcp_no_delay", true);
+            pool.insert("max_merge_buffer_stack", 0);
+            pool.insert("buffer_size", 4096);
+            pools.push_back(std::move(pool));
+
+            auto pconfig = manapi::json::object();
+            pconfig.insert("pools", std::move(pools));
+            pconfig.insert("save_config" , false);
+            manapi::unwrap(co_await router.config_object(std::move(pconfig)));
             manapi::unwrap(co_await router.start());
         });
 
