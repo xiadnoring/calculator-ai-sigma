@@ -103,10 +103,10 @@ int main() {
                 co_return resp.json({{"ok", false}, {"msg", "not found"}}).unwrap();
             auto data = manapi::json::parse(res[0]["chat"].as<std::string>()).unwrap();
             auto version = res[0]["version"].as<int>();
-            data.push_back({
-                {"role", "user"},
-                {"content", std::move(userdata["content"].as_string())}
-            });
+            auto usermsg = manapi::json::object();
+            usermsg.insert("role", "user");
+            usermsg.insert("content", std::move(userdata["content"]));
+            data.push_back(std::move(usermsg));
             // auto b = manapi::string::random(100);
             // for (int i = 0; i < 6; i++)
             //     b = b + b;
@@ -125,19 +125,21 @@ int main() {
             //         f=true;
             //     co_return size;
             // }).unwrap();
-            auto response = manapi::unwrap(co_await manapi::net::fetch2::fetch ("https://openrouter.ai/api/v1/chat/completions", {
-                {"method", "POST"},
-                {"headers", {
-                    {"Authorization", std::format("Bearer {}", app["api-key"].as_string())},
-                    {"Content-Type", "application/json"}
-                }},
-                {"recv_nodelay", true}
-            }, manapi::json ({
-                {"model", app["model"]},
-                {"messages", data},
-                {"stream", true},
-                {"reasoning", manapi::json::object({{"enabled", true}})}
-            }).dump()));
+            auto headers = manapi::json::object();
+            headers.insert("Authorization", std::format("Bearer {}", app["api-key"].as_string()));
+            headers.insert("Content-Type", "application/json");
+            auto pfetch = manapi::json::object();
+            pfetch.insert("method", "POST");
+            pfetch.insert("headers", std::move(headers));
+            pfetch.insert("recv_nodelay", true);
+            auto body = manapi::json::object();
+            auto reasoning = manapi::json::object();
+            reasoning.insert("enabled", true);
+            body.insert("model", app["model"]);
+            body.insert("messages", data);
+            body.insert("stream", true);
+            body.insert("reasoning", std::move(reasoning));
+            auto response = manapi::unwrap(co_await manapi::net::fetch2::fetch ("https://openrouter.ai/api/v1/chat/completions", std::move(pfetch), body.dump()));
 
             if (!response.ok()) {
                 auto text = manapi::unwrap(co_await response.text());
