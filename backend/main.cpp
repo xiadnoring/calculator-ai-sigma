@@ -290,6 +290,7 @@ int main() {
             pool.insert("tcp_no_delay", true);
             pool.insert("max_merge_buffer_stack", 0);
             pool.insert("buffer_size", 4096);
+            pool.insert("max_connections_by_ip", 10000);
             pools.push_back(std::move(pool));
 
             auto pconfig = manapi::json::object();
